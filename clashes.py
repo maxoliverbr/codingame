@@ -1,3 +1,5 @@
+# Cool clashes !
+
 """
 x = input()
 
