@@ -21,3 +21,12 @@ for c in s:
         ans += c.swapcase()
 print(ans)
 """
+
+"""
+s = input()
+x=''
+for i in s:
+    if i.isupper():
+        x+=i
+print(x)
+"""
