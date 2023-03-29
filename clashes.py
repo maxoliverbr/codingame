@@ -11,3 +11,13 @@ s = input()
 l = len(s)
 print(sum(map(ord,s))//l)
 """
+
+"""
+s = input()
+ans = ''
+for c in s:
+    ans += c
+    if c.isalpha():
+        ans += c.swapcase()
+print(ans)
+"""
