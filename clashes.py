@@ -57,3 +57,20 @@ sorted_string = "+".join(numbers)
 print(sorted_string)
 
 """
+
+"""
+ROT13.5
+import string as s
+a=s.ascii_letters
+b='0123456789'
+v=input()
+r=''
+for c in v:
+ if c in a:
+  r+=a[((a.find(c)+13)%26)+(26 if c.isupper() else 0)]
+ elif c in b:
+  r+=b[(b.find(c)+5)%10]
+ else:
+  r+=c
+print(r)
+"""
