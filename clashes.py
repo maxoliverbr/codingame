@@ -46,3 +46,14 @@ for c in sorted(M.keys()):
     
 """
 
+"""
+_sum = input()
+
+# Define the original string
+# Split the string into a list of numbers
+numbers = _sum.split("+")
+numbers.sort()
+sorted_string = "+".join(numbers)
+print(sorted_string)
+
+"""
