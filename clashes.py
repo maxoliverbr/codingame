@@ -35,3 +35,14 @@ print(x)
 format (000) 000-0000
 print(f"({s[:3]}) {s[3:6]}-{s[6:10]}")
 """
+
+"""
+
+s = input()
+M = {c: s.count(c) for c in s}
+
+for c in sorted(M.keys()):
+    print(c*M[c])
+    
+"""
+
