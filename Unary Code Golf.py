@@ -1,18 +1,16 @@
 x=o=""
 for c in input():x+=format(ord(c),"07b")
-D=F=False
-y="0"
+D=E=F=False
+T=True
 for i in x:
- if i=="1" and not F:
+ if i=="1" and not E:
   o+=" 0 0"
-  F=True
-  D=False
- elif i=="1" and F:
-  o+=y
- elif i==y and not D:
+  E=T
+  D=F
+ elif i=="0" and not D:
   o+=" 00 0"
-  D=True
-  F=False
- elif i==y and D:
-  o+=y
+  D=T
+  E=F
+ else:
+  o+="0"
 print(o[1:])
