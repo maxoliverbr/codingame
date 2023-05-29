@@ -1,0 +1,66 @@
+import sys
+import math
+
+# Auto-generated code below aims at helping you parse
+# the standard input according to the problem statement.
+
+def ADD(x,y):
+    return(int(x)+int(y))
+
+def SUB(x,y):
+    return(int(x)-int(y))
+
+def MULT(x,y):
+    return(int(x)*int(y))
+
+def VALUE(x,y):
+    return x
+
+n = int(input())
+v = []
+o = []
+for i in range(n):
+    operation, arg_1, arg_2 = input().split()
+    if operation=="VALUE":
+        if arg_1=="_":
+            arg_1="0"
+        if arg_2=="_":
+            arg_2="0"
+    o.append((operation,arg_1,arg_2))
+print(n, file=sys.stderr, flush=True)
+print(o, file=sys.stderr, flush=True)
+
+od = {
+    "VALUE": "=",
+    "ADD": "+",
+    "SUB": "-",
+    "MULT": "*"
+    }
+
+
+for i in range(n):
+    
+    f =    o[i][0]
+    arg1 = o[i][1]
+    arg2 = o[i][2]
+    #print(f,arg1,arg2, file=sys.stderr, flush=True)
+
+    if "$" in arg1:
+        arg1 = arg1.replace("$","")
+        arg1 = o[int(arg1)][1]
+    else:
+        arg1 = int(arg1)
+    
+    if "$" in arg2:
+        arg2 = arg2.replace("$","")
+        arg2 = o[int(arg2)][1]
+    else:
+        arg2 = int(arg2)
+
+    print(f,arg1,arg2, file=sys.stderr, flush=True)
+    print(eval(f"{o[i][0]}({arg1},{arg2})"))
+    
+    # Write an answer using print
+    # To debug: print("Debug messages...", file=sys.stderr, flush=True)
+
+    #print("1")
