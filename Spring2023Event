@@ -7,14 +7,32 @@ my_base_index =[]
 opp_base_index =[]
 number_of_cells = int(input())  # amount of hexagonal cells in this map
 ct =[]
+total_eggs=0
+total_crystals=0
+total_resources=0
+
 for i in range(number_of_cells):
     # _type: 0 for empty, 1 for eggs, 2 for crystal
     # initial_resources: the initial amount of eggs/crystals on this cell
     # neigh_0: the index of the neighbouring cell for each direction
     _type, initial_resources, neigh_0, neigh_1, neigh_2, neigh_3, neigh_4, neigh_5 = [int(j) for j in input().split()]
+    if _type==1:
+        total_eggs+=initial_resources
+    elif _type==2:
+        total_crystals+=initial_resources
+
     ct.append((_type,i))
     
-print(ct, file=sys.stderr, flush=True)
+total_resources = total_eggs+total_crystals
+p_egg_crystal = total_crystals/total_eggs
+
+if total_crystals > total_eggs:
+    maxr = round(total_crystals/total_resources*10+total_crystals/total_eggs-p_egg_crystal)
+else:
+    maxr = round(total_crystals/total_resources*10)
+
+print("TR - TE - TC - maxr = ", total_resources, total_eggs, total_crystals, maxr, file=sys.stderr, flush=True)
+#print(ct, file=sys.stderr, flush=True)
 
 number_of_bases = int(input())
 
@@ -56,14 +74,19 @@ while True:
         #print(f"BEACON {sc[i][1]} {1}; LINE {my_base_index[0]} {sc[i][1]} {1};")
         #print(f"BEACON {sc[i][1]} {100}")
         #print("r, sc[i][0] = ", round, sc[i][0], file=sys.stderr, flush=True)
-        if round<4:
+        if round<maxr:
+            #print("round<maxr ", round, sc[i][0], file=sys.stderr, flush=True)
             if sc[i][0]==1:
-                ol+=f"LINE {my_base_index[0]} {sc[i][2]} {my_ants};"
+                ol+=f"LINE {my_base_index[0]} {sc[i][2]} {0};"
             else:                        
-                #ol+=f"LINE {my_base_index[0]} {sc[i][2]} {1};"
-                ob+=f"BEACON {sc[i][2]} {0};" 
+                ol+=f"LINE {my_base_index[0]} {sc[i][2]} {1};"
+                #ob+=f"BEACON {sc[i][2]} {0};" 
         else:
-            ol+=f"LINE {my_base_index[0]} {sc[i][2]} {1};"
+            #print("round>maxr ", round, sc[i][0], file=sys.stderr, flush=True)
+            if sc[i][0]==2:
+                ol+=f"LINE {my_base_index[0]} {sc[i][2]} {0};"
+            else:
+                ob+=f"BEACON {sc[i][2]} {1};" 
             # ob+=f"BEACON {sc[i][2]} {0};" 
 
     print(ol+ob)
