@@ -44,20 +44,23 @@ while True:
     sc = sorted(cells)[::-1]
     # print("my_ants = ", my_ants, file=sys.stderr, flush=True)
     print("sc = ", sc, file=sys.stderr, flush=True)
+
+    
     # Write an action using print
     # To debug: print("Debug messages...", file=sys.stderr, flush=True)
 
     ol = ""
     ob = ""
-    c_ants = my_ants//len(cells)*2        
+    
     for i in range(len(cells)):
         #print(f"BEACON {sc[i][1]} {1}; LINE {my_base_index[0]} {sc[i][1]} {1};")
         #print(f"BEACON {sc[i][1]} {100}")
+        #print("r, sc[i][0] = ", round, sc[i][0], file=sys.stderr, flush=True)
         if round<4:
             if sc[i][0]==1:
                 ol+=f"LINE {my_base_index[0]} {sc[i][2]} {my_ants};"
             else:                        
-                ol+=f"LINE {my_base_index[0]} {sc[i][2]} {1};"
+                #ol+=f"LINE {my_base_index[0]} {sc[i][2]} {1};"
                 ob+=f"BEACON {sc[i][2]} {0};" 
         else:
             ol+=f"LINE {my_base_index[0]} {sc[i][2]} {1};"
