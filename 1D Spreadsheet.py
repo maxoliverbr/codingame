@@ -67,37 +67,65 @@ r=0
 print("-----", file=sys.stderr, flush=True)   
 while calc_end == False:
     for i in range(n):
+        print("i", file=sys.stderr, flush=True)   
+
         
         f =    o[i][0]
         arg1 = o[i][1]
         arg2 = o[i][2]
-        #print(i,f,arg1,arg2, file=sys.stderr, flush=True)
-        #print("eval= ",f"{o[i][0]}({arg1},{arg2},{i})", file=sys.stderr, flush=True)    
-        
+        varg1= None
+        varg2= None
+        print("V-",v, file=sys.stderr, flush=True)        
         print("X-",f"{o[i][0]}({arg1},{arg2},{i})", file=sys.stderr, flush=True)        
-        if f != "VALUE":
-            if "$" in arg1 and "$" in arg2 and calc_start == False:
-                oo.append(None)
+        
+        if f!="VALUE":
+            if "$" in arg1:
+                iarg1 = int(arg1.replace("$",""))
+                if v[iarg1][1]!="nc":
+                    varg1 = int(v[iarg1][0])
+                else:
+                    print("c1", file=sys.stderr, flush=True)   
+                    continue
+            else:
+                varg1 = int(arg1)
+
+            if "$" in arg2:
+                iarg2 = int(arg2.replace("$",""))
+                if v[iarg2][1]!="nc":
+                    varg2 = int(v[iarg2][0])
+                else:
+                    print("c2", file=sys.stderr, flush=True)   
+                    continue
+            else:
+                varg2 = int(arg2)
+
+            print("X-",f"{f}({varg1},{varg2},{i})", file=sys.stderr, flush=True)        
+            oo.append(eval(f"{o[i][0]}({varg1},{varg2},{i})"))    
+                    
+        """ 
+            if f != "VALUE":
+                if "$" in arg1 and "$" in arg2 and calc_start == False:
+                    oo.append(None)
+                else:
+                    calc_start = True
+                    if "$" in arg1:
+                        arg1 = arg1.replace("$","")
+                        arg1 = v[int(arg1)][0]
+                    else:
+                        arg1 = int(arg1)
+                    
+                    if "$" in arg2:                
+                        arg2 = arg2.replace("$","")
+                        arg2 = v[int(arg2)][0]
+                    else:
+                        arg2 = int(arg2)
+                    
+                    #print(f"{o[i][0]}({arg1},{arg2},{i})", file=sys.stderr, flush=True)        
+                    oo.append(eval(f"{o[i][0]}({arg1},{arg2},{i})"))
             else:
                 calc_start = True
-                if "$" in arg1:
-                    arg1 = arg1.replace("$","")
-                    arg1 = v[int(arg1)][0]
-                else:
-                    arg1 = int(arg1)
-                
-                if "$" in arg2:                
-                    arg2 = arg2.replace("$","")
-                    arg2 = v[int(arg2)][0]
-                else:
-                    arg2 = int(arg2)
-                
-                #print(f"{o[i][0]}({arg1},{arg2},{i})", file=sys.stderr, flush=True)        
                 oo.append(eval(f"{o[i][0]}({arg1},{arg2},{i})"))
-        else:
-            calc_start = True
-            oo.append(eval(f"{o[i][0]}({arg1},{arg2},{i})"))
-
+        """
             #print("ev ", i,f,arg1,arg2, file=sys.stderr, flush=True)
             #print("eval= ",f"{o[i][0]}({arg1},{arg2},{i})", file=sys.stderr, flush=True)
             #print(eval(f"{o[i][0]}({arg1},{arg2},{i})"))
