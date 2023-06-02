@@ -28,10 +28,10 @@ for i in range(n):
     o=[]
     os=""
     line = input()
-    ll = line.replace("(",",")
-    ll = ll.replace(")",",")
-    ll = ll.split(",")
-    print(ll, file=sys.stderr, flush=True)
+    ll = line.replace("(","*")
+    ll = ll.replace(")","*")
+    ll = ll.split("*")
+    #print(ll, file=sys.stderr, flush=True)
     for j in ll:
         if "|" in j:
             lj=j.split("|")
@@ -40,8 +40,8 @@ for i in range(n):
             #o.append(lj[i])
             os+=lj[mcc]
             cc+=1
-            print(lj[mcc], file=sys.stderr, flush=True)
-            print(i, nc, cc, file=sys.stderr, flush=True)
+            print(lj[mcc], mcc, lj, file=sys.stderr, flush=True)
+            #print(i, nc, cc, file=sys.stderr, flush=True)
         else:
             #print(j, file=sys.stderr, flush=True)
             #o.append(j)
