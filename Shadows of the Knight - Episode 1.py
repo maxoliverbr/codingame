@@ -13,21 +13,22 @@ x0, y0 = [int(i) for i in input().split()]
 print(w,h,n, file=sys.stderr, flush=True)
 print(x0,y0, file=sys.stderr, flush=True)
 
-step_w = 1/w
-step_h = 1/h
+step_w = w//2
+step_h = h//2
 
 d = {
-    "U": (0,step_h),
-    "D": (0,-step_h),
+    "D": (0,step_h),
+    "U": (0,-step_h),
     "L": (-step_w,0),
     "R": (step_w,0),
-    "UR": (step_w,step_h),
-    "UL": (-step_w,step_h),
-    "DR": (step_w,-step_h),
-    "DL": (-step_w,-step_h)
+    "UR": (step_w,-step_h),
+    "UL": (-step_w,-step_h),
+    "DR": (step_w,step_h),
+    "DL": (-step_w,step_h)
 }
 
-
+dx0=dy0=0
+i = 1
 # game loop
 while True:
     bomb_dir = input()  # the direction of the bombs from batman's current location (U, UR, R, DR, D, DL, L or UL)
@@ -36,8 +37,23 @@ while True:
     # Write an action using print
     # To debug: print("Debug messages...", file=sys.stderr, flush=True)
 
-    x1 = x0 + d[bomb_dir][0]
-    y1 = y0 + d[bomb_dir][1]
+    dx0 = (d[bomb_dir][0])/i
+    dy0 = (d[bomb_dir][1])/i
 
+    x0 += round(dx0)
+    y0 += round(dy0)
+
+    if x0>=w:
+        x0=w-1
+    elif x0<0:
+        x0=0
+
+    if y0>=h:
+        y0=h-1
+    elif y0<0:
+        y0=0
+    
+    print("DD = ", dx0, dy0, file=sys.stderr, flush=True)        
     # the location of the next window Batman should jump to.
-    print(f"{x1} {y1}")
+    print(f"{x0} {y0}")
+    i+=2
