@@ -23,10 +23,10 @@ for asteroid in asteroids:
     xy_second, xy_first = [None,None],[None,None]
     for i in range(w):
         for j in range(h):
-            if first_picture_row[i][j] == asteroid[0]:
+            if first_picture_row[i][j] == asteroid:
                 xy_first = [i,j]
                 
-            if second_picture_row[i][j] == asteroid[0]:
+            if second_picture_row[i][j] == asteroid:
                 xy_second = [i,j]
                 
             if xy_first!=[None,None] and xy_second!=[None,None]:
@@ -37,7 +37,7 @@ for asteroid in asteroids:
                 cy = math.floor(xy_second[1]+ty*dt32)
                 
                 if 0<=cx<w and 0<=cy<h:
-                    output[cx][cy] = asteroid[0]
+                    output[cx][cy] = asteroid
 
 for i in output:
     print(''.join(map(str, i)))
