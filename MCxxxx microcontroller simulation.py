@@ -38,6 +38,45 @@ mov dat acc
 mov acc x1
 
 2 1
+
+tc4:
+1
+3
+7
+mov x0 dat
+mov 4 acc
+add dat
+mov acc x1
+mov 4 acc
+sub dat
+mov acc x1
+
+7 1
+
+
+2
+5 7
+4
+mov x0 acc
+mov x0 dat
+mul dat
+mov acc x1
+
+4
+0 56 -3 100
+12
+mov x0 acc
+not
+mov acc x1
+mov x0 acc
+not
+mov acc x1
+mov x0 acc
+not
+mov acc x1
+mov x0 acc
+not
+mov acc x1
 """
 
 # Auto-generated code below aims at helping you parse
@@ -55,21 +94,33 @@ my_cpu = CPU()
 def MOV(x,y):
     if x == "X0" and y=="X1": my_cpu.x1.append(my_cpu.x0.pop(0))
     if x == "X0" and y=="DAT": my_cpu.dat=my_cpu.x0.pop(0)
+    if x == "X0" and y=="ACC": my_cpu.acc=my_cpu.x0.pop(0)
     if x == "DAT" and y=="ACC": my_cpu.acc=my_cpu.dat
     if x == "ACC" and y=="X1": my_cpu.x1.append(my_cpu.acc)
+    if x.isnumeric() and y=="ACC": my_cpu.acc = int(x)
+    print(my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
     pass
 
 def ADD(x):
+    if x == "DAT": my_cpu.acc = my_cpu.dat+my_cpu.acc
     pass
 
 def SUB(x):
+    if x == "DAT": my_cpu.acc = my_cpu.acc-my_cpu.dat
     pass
 
 def MUL(x):
+    print(my_cpu.x0, file=sys.stderr, flush=True)
+    print(my_cpu.acc, my_cpu.dat, file=sys.stderr, flush=True)
+    if x == "DAT": my_cpu.acc = my_cpu.acc*my_cpu.dat
     pass
 
 def NOT():
-    pass
+    if my_cpu.acc == 0:
+        my_cpu.acc = 100
+    else:
+        my_cpu.acc = 0
+    print("NOT ", my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
 
 def DGT(x):
     pass
@@ -102,7 +153,12 @@ print(instructions, file=sys.stderr, flush=True)
 
 for instruction in instructions:
     i = instruction.split()
-    r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
+    if i[0] == "MOV":
+        r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
+    elif i[0] =="ADD" or i[0] == "SUB" or i[0]=="MUL":
+        r = eval(f"{i[0]}('{i[1]}')")
+    elif i[0] =="NOT":
+        r = eval(f"{i[0]}()")
 
 # Write an answer using print
 # To debug: print("Debug messages...", file=sys.stderr, flush=True)
