@@ -34,7 +34,6 @@ def ADD(r, val1, val2):
     
 
 def SUB(r,val1,val2):
-    print(f"SUB {r}, {val1}, {val2} ", file=sys.stderr, flush=True)
     if val1.isalpha():val1 = f"register.{val1}"
     if val2.isalpha():val2 = f"register.{val2}"
     if   r == "a":register.a = eval(val1)-eval(val2)
@@ -44,7 +43,6 @@ def SUB(r,val1,val2):
     
 
 def JNE(imm,val1,val2):
-    print(f"JNE {imm}, {val1}, {val2}", file=sys.stderr, flush=True)
     if val1.isalpha():val1 = f"register.{val1}"
     if val2.isalpha():val2 = f"register.{val2}"
     res_1 = eval(val1)
