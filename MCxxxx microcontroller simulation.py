@@ -77,6 +77,22 @@ mov acc x1
 mov x0 acc
 not
 mov acc x1
+
+---
+1
+2
+11
+mov x0 dat
+mov dat acc
+# mov dat x1
+jmp end
+mov dat x1
+mult:
+mul dat
+jmp ending
+end: jmp mult
+ending:
+mov acc x1
 """
 
 # Auto-generated code below aims at helping you parse
@@ -98,7 +114,7 @@ def MOV(x,y):
     if x == "DAT" and y=="ACC": my_cpu.acc=my_cpu.dat
     if x == "ACC" and y=="X1": my_cpu.x1.append(my_cpu.acc)
     if x.isnumeric() and y=="ACC": my_cpu.acc = int(x)
-    print(my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
+    #print(my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
     pass
 
 def ADD(x):
@@ -110,8 +126,8 @@ def SUB(x):
     pass
 
 def MUL(x):
-    print(my_cpu.x0, file=sys.stderr, flush=True)
-    print(my_cpu.acc, my_cpu.dat, file=sys.stderr, flush=True)
+    #print(my_cpu.x0, file=sys.stderr, flush=True)
+    #print(my_cpu.acc, my_cpu.dat, file=sys.stderr, flush=True)
     if x == "DAT": my_cpu.acc = my_cpu.acc*my_cpu.dat
     pass
 
@@ -120,7 +136,7 @@ def NOT():
         my_cpu.acc = 100
     else:
         my_cpu.acc = 0
-    print("NOT ", my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
+    #print("NOT ", my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
 
 def DGT(x):
     pass
@@ -153,7 +169,9 @@ print(instructions, file=sys.stderr, flush=True)
 
 for instruction in instructions:
     i = instruction.split()
-    if i[0] == "MOV":
+    if i[0] == "#":
+        continue
+    elif i[0] == "MOV":
         r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
     elif i[0] =="ADD" or i[0] == "SUB" or i[0]=="MUL":
         r = eval(f"{i[0]}('{i[1]}')")
