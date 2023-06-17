@@ -97,23 +97,29 @@ mov acc x1
 
 1
 2
-11
-mov x0 dat
-mov dat acc
-# mov dat x1
-jmp end
-mov dat x1
-mult:
-mul dat
-jmp ending
-end: jmp mult
-ending:
+7
+mov x0 acc
+calc:
+# /╲/\( •̀ ω •́ )/\╱\
+# Look at my spider, it's so cute!
+sub 1
+@ jmp calc
 mov acc x1
 
 """
 
 # Auto-generated code below aims at helping you parse
 # the standard input according to the problem statement.
+class CODE:
+    def __init__(self, conditional, instruction, count):
+        self.conditional = ""
+        self.code = "" # temp storage
+        self.execcount = 0 # store result arithmetric instruction
+    
+    def __repr__(self):
+        return f"'{self.conditional}' '{self.code}' {self.execcount}"
+    
+
 class CPU:
     def __init__(self, dat, acc, x0, x1, line, labels):
         self.dat = 0 # temp storage
@@ -122,12 +128,16 @@ class CPU:
         self.x1 = [] # output
         self.line = 0
         self.labels = {}
+    
+    
 
-instructions = []
+ic = []
 my_cpu = CPU(0,0,[],[],0,[])
 
 
 def MOV(x,y):
+    print("MOV= ",x,y,my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
+
     if x == "X0" and y=="X1": my_cpu.x1.append(my_cpu.x0.pop(0))
     if x == "X0" and y=="DAT": my_cpu.dat=my_cpu.x0.pop(0)
     if x == "X0" and y=="ACC": my_cpu.acc=my_cpu.x0.pop(0)
@@ -139,10 +149,8 @@ def MOV(x,y):
 
 def JMP(x):
     x=x+":"
-    print("JMP  =", x, my_cpu.labels[x], my_cpu.line, file=sys.stderr, flush=True)
     if x in my_cpu.labels:
         my_cpu.line = my_cpu.labels[x]
-    print("JMP2 =", x, my_cpu.labels[x], my_cpu.line, file=sys.stderr, flush=True)
     pass
 
 def ADD(x):
@@ -150,12 +158,13 @@ def ADD(x):
     pass
 
 def SUB(x):
+    print("SUB= ", x, my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
     if x == "DAT": my_cpu.acc = my_cpu.acc-my_cpu.dat
+    elif x.isnumeric():
+        my_cpu.acc = my_cpu.acc-int(x)
     pass
 
 def MUL(x):
-    #print(my_cpu.x0, file=sys.stderr, flush=True)
-    #print(my_cpu.acc, my_cpu.dat, file=sys.stderr, flush=True)
     if x == "DAT": my_cpu.acc = my_cpu.acc*my_cpu.dat
     pass
 
@@ -164,7 +173,6 @@ def NOT():
         my_cpu.acc = 100
     else:
         my_cpu.acc = 0
-    #print("NOT ", my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
 
 def DGT(x):
     pass
@@ -191,25 +199,41 @@ for i in input().split():
 n = int(input())
 
 for i in range(n):
+    line_code = CODE("","",0)
     instruction = input().upper()
-    instructions.append(instruction)
+    line_code.conditional = ""
+    line_code.code = instruction
+    line_code.execcount = 0
+    ic.append(line_code)
     ins = instruction.split()
-    if ":" in instruction:
+    if ":" in ins[0]:
         my_cpu.labels[ins[0]]=i    
 
-print(instructions, file=sys.stderr, flush=True)
-
+print("IC= ", ic, file=sys.stderr, flush=True)
 
 while(my_cpu.line<n):
-    for instruction in instructions:
+    for ins in ic:
         jsonStr = json.dumps(my_cpu.__dict__)
-        print(jsonStr, file=sys.stderr, flush=True)
-        i = instruction.split()
+        #print(jsonStr, file=sys.stderr, flush=True)
+        i = ins.code.split()
+        
         if i[0] == "#":
             pass
-        if ":" in i[0]:
+        if i[0] == "@":
+            #print("@ jmp calc",ins, file=sys.stderr, flush=True)
+            if ins.execcount == 1:
+                print("@ NO EXEC ",ins, file=sys.stderr, flush=True)
+                pass
+            else:
+                print("@ jmp calc 1",my_cpu.line, file=sys.stderr, flush=True)
+                ins.execcount = 1
+                r = eval(f"{i[1]}('{i[2]}')")
+                print("@ jmp calc 1",my_cpu.line, file=sys.stderr, flush=True)
+                continue
+        elif ":" in i[0]:
             #my_cpu.labels.append((i[0],my_cpu.line))
-            my_cpu.labels[i[0]] = my_cpu.line
+            #my_cpu.labels[i[0]] = my_cpu.line
+            pass
         elif i[0] == "JMP":
             r = eval(f"{i[0]}('{i[1]}')")
             continue
