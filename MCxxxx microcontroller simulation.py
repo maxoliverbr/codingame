@@ -1,5 +1,6 @@
 import sys
 import math
+import json
 
 """
 Line 1 : An integer K representing the length of the Input Data array
@@ -93,18 +94,37 @@ jmp ending
 end: jmp mult
 ending:
 mov acc x1
+
+1
+2
+11
+mov x0 dat
+mov dat acc
+# mov dat x1
+jmp end
+mov dat x1
+mult:
+mul dat
+jmp ending
+end: jmp mult
+ending:
+mov acc x1
+
 """
 
 # Auto-generated code below aims at helping you parse
 # the standard input according to the problem statement.
 class CPU:
-    dat = 0 # temp storage
-    acc = 0 # store result arithmetric instruction
-    x0  = [] # input
-    x1  = [] # output
+    def __init__(self, dat, acc, x0, x1, line, labels):
+        self.dat = 0 # temp storage
+        self.acc = 0 # store result arithmetric instruction
+        self.x0 = [] # input
+        self.x1 = [] # output
+        self.line = 0
+        self.labels = {}
 
 instructions = []
-my_cpu = CPU()
+my_cpu = CPU(0,0,[],[],0,[])
 
 
 def MOV(x,y):
@@ -115,6 +135,14 @@ def MOV(x,y):
     if x == "ACC" and y=="X1": my_cpu.x1.append(my_cpu.acc)
     if x.isnumeric() and y=="ACC": my_cpu.acc = int(x)
     #print(my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
+    pass
+
+def JMP(x):
+    x=x+":"
+    print("JMP  =", x, my_cpu.labels[x], my_cpu.line, file=sys.stderr, flush=True)
+    if x in my_cpu.labels:
+        my_cpu.line = my_cpu.labels[x]
+    print("JMP2 =", x, my_cpu.labels[x], my_cpu.line, file=sys.stderr, flush=True)
     pass
 
 def ADD(x):
@@ -161,22 +189,37 @@ for i in input().split():
     my_cpu.x0.append(int(i))
 
 n = int(input())
-for i in range(n):
-    instructions.append(input().upper())
 
-print(my_cpu.x0, file=sys.stderr, flush=True)
+for i in range(n):
+    instruction = input().upper()
+    instructions.append(instruction)
+    ins = instruction.split()
+    if ":" in instruction:
+        my_cpu.labels[ins[0]]=i    
+
 print(instructions, file=sys.stderr, flush=True)
 
-for instruction in instructions:
-    i = instruction.split()
-    if i[0] == "#":
-        continue
-    elif i[0] == "MOV":
-        r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
-    elif i[0] =="ADD" or i[0] == "SUB" or i[0]=="MUL":
-        r = eval(f"{i[0]}('{i[1]}')")
-    elif i[0] =="NOT":
-        r = eval(f"{i[0]}()")
+
+while(my_cpu.line<n):
+    for instruction in instructions:
+        jsonStr = json.dumps(my_cpu.__dict__)
+        print(jsonStr, file=sys.stderr, flush=True)
+        i = instruction.split()
+        if i[0] == "#":
+            pass
+        if ":" in i[0]:
+            #my_cpu.labels.append((i[0],my_cpu.line))
+            my_cpu.labels[i[0]] = my_cpu.line
+        elif i[0] == "JMP":
+            r = eval(f"{i[0]}('{i[1]}')")
+            continue
+        elif i[0] == "MOV":
+            r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
+        elif i[0] =="ADD" or i[0] == "SUB" or i[0]=="MUL":
+            r = eval(f"{i[0]}('{i[1]}')")
+        elif i[0] =="NOT":
+            r = eval(f"{i[0]}()")
+        my_cpu.line+=1
 
 # Write an answer using print
 # To debug: print("Debug messages...", file=sys.stderr, flush=True)
