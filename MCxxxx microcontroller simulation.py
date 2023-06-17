@@ -128,6 +128,7 @@ class CPU:
         self.x1 = [] # output
         self.line = 0
         self.labels = {}
+        self.cpucounter = 0
     
     
 
@@ -144,6 +145,7 @@ def MOV(x,y):
     if x == "DAT" and y=="ACC": my_cpu.acc=my_cpu.dat
     if x == "ACC" and y=="X1": my_cpu.x1.append(my_cpu.acc)
     if x.isnumeric() and y=="ACC": my_cpu.acc = int(x)
+    if x.isnumeric() and y=="X1": my_cpu.x1.append(int(x))
     #print(my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
     pass
 
@@ -158,7 +160,7 @@ def ADD(x):
     pass
 
 def SUB(x):
-    print("SUB= ", x, my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
+    #print("SUB= ", x, my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
     if x == "DAT": my_cpu.acc = my_cpu.acc-my_cpu.dat
     elif x.isnumeric():
         my_cpu.acc = my_cpu.acc-int(x)
@@ -173,6 +175,8 @@ def NOT():
         my_cpu.acc = 100
     else:
         my_cpu.acc = 0
+def LABEL():
+    pass
 
 def DGT(x):
     pass
@@ -212,11 +216,15 @@ for i in range(n):
 print("IC= ", ic, file=sys.stderr, flush=True)
 
 while(my_cpu.line<n):
-    for ins in ic:
+    #for ins in ic:
+        print("CPU= ", my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
+        ins = ic[my_cpu.line]
+        my_cpu.cpucounter+=1
         jsonStr = json.dumps(my_cpu.__dict__)
         #print(jsonStr, file=sys.stderr, flush=True)
         i = ins.code.split()
-        
+        jsonStr = json.dumps(ins.__dict__)
+        print(jsonStr, file=sys.stderr, flush=True)
         if i[0] == "#":
             pass
         if i[0] == "@":
@@ -225,14 +233,13 @@ while(my_cpu.line<n):
                 print("@ NO EXEC ",ins, file=sys.stderr, flush=True)
                 pass
             else:
-                print("@ jmp calc 1",my_cpu.line, file=sys.stderr, flush=True)
+                #print("@ jmp calc 1",my_cpu.line, file=sys.stderr, flush=True)
                 ins.execcount = 1
                 r = eval(f"{i[1]}('{i[2]}')")
-                print("@ jmp calc 1",my_cpu.line, file=sys.stderr, flush=True)
+                #print("@ jmp calc 1",my_cpu.line, file=sys.stderr, flush=True)
                 continue
         elif ":" in i[0]:
-            #my_cpu.labels.append((i[0],my_cpu.line))
-            #my_cpu.labels[i[0]] = my_cpu.line
+            #r = eval(f"{i[1]}('{i[2]}','{i[3]}')")
             pass
         elif i[0] == "JMP":
             r = eval(f"{i[0]}('{i[1]}')")
