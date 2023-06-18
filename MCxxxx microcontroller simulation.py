@@ -8,21 +8,18 @@ Line 2 : K integers separated by white spaces representing your Input Data
 Line 3 : An integer N representing the number of lines of code
 Next N lines : A Line of 
 
-3
--999 999 100
-10
-mov x0 acc
-sub 50
-mov acc x1
-mov x0 acc
-add 50
-mov acc x1
+1
+4
+7
 mov x0 dat
-mov dat acc
-mul dat
++ mov dat x1
+- mov dat x1
+teq dat 0
++ add 1
+- sub 1
 mov acc x1
 
--999 999 999
+
 """
 
 # Auto-generated code below aims at helping you parse
@@ -200,17 +197,24 @@ for i in range(n):
     line_code = CODE("","",0)
     instruction = input().upper()
     ins = instruction.split()
-    #print("INS= ", ins[0], file=sys.stderr, flush=True)
+    print("INS= ", ins[0], file=sys.stderr, flush=True)
     if ":" in ins[0]:
         my_cpu.labels[ins[0]]=i  
         instruction = instruction.replace(ins[0],"").strip()
         #print(f"LABEL= '{instruction}'", file=sys.stderr, flush=True)
         if instruction=="":
             instruction="#"
-
-    line_code.conditional = ""
-    line_code.code = instruction
-    line_code.execcount = 0
+        line_code.conditional = ""
+        line_code.code = instruction
+        line_code.execcount = 0
+    elif "+" in ins[0] or "-" in ins[0]:
+        line_code.conditional = ins[0]
+        line_code.code = instruction[2:]
+        line_code.execcount = 0
+    else:
+        line_code.conditional = ""
+        line_code.code = instruction
+        line_code.execcount = 0
     ic.append(line_code)
     
         
