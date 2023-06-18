@@ -7,6 +7,22 @@ Line 1 : An integer K representing the length of the Input Data array
 Line 2 : K integers separated by white spaces representing your Input Data
 Line 3 : An integer N representing the number of lines of code
 Next N lines : A Line of 
+
+3
+-999 999 100
+10
+mov x0 acc
+sub 50
+mov acc x1
+mov x0 acc
+add 50
+mov acc x1
+mov x0 dat
+mov dat acc
+mul dat
+mov acc x1
+
+-999 999 999
 """
 
 # Auto-generated code below aims at helping you parse
@@ -23,15 +39,90 @@ class CODE:
 
 class CPU:
     def __init__(self, dat, acc, x0, x1, line, labels):
-        self.dat = 0 # temp storage
-        self.acc = 0 # store result arithmetric instruction
-        self.x0 = [] # input
-        self.x1 = [] # output
-        self.line = 0
-        self.labels = {}
-        self.cpucounter = 0
+        self._dat = 0 # temp storage
+        self._acc = 0 # store result arithmetric instruction
+        self._x0 = [] # input
+        self._x1 = [] # output
+        self._line = 0
+        self._labels = {}
+        self._cpucounter = 0
     
+    @property
+    def x0(self):
+        return self._x0
+
+    @x0.setter
+    def x0(self,new_x0):
+        if new_x0>999:
+            self._x0.append(999)
+        elif new_x0<-999:
+            self._x0.append(-999)
+        else:
+            self._x0.append(new_x0)
+
+    @property
+    def x1(self):
+        return self._x1
     
+    @x1.setter
+    def x1(self,new_x1):
+        if new_x1>999:
+            self._x1.append(999)
+        elif new_x1<-999:
+            self._x1.append(-999)
+        else:
+            self._x1.append(new_x1)
+
+    @property
+    def acc(self):
+        return self._acc
+
+    @acc.setter
+    def acc(self,new_acc):
+        if new_acc>999:
+            self._acc=999
+        elif new_acc<-999:
+            self._acc=-999
+        else:
+            self._acc=new_acc
+
+    @property
+    def dat(self):
+        return self._dat
+
+    @dat.setter
+    def dat(self,new_dat):
+        if new_dat>999:
+            self._dat=999
+        elif new_dat<-999:
+            self._dat=-999
+        else:
+            self._dat=new_dat
+
+    @property
+    def line(self):
+        return self._line
+
+    @line.setter
+    def line(self,new_line):
+        self._line=new_line
+
+    @property
+    def labels(self):
+        return self._labels
+
+    @labels.setter
+    def labels(self,new_label):
+        self._labels=new_label
+
+    @property
+    def cpucounter(self):
+        return self._cpucounter
+
+    @cpucounter.setter
+    def cpucounter(self,new_cpucounter):
+        self._cpucounter=new_cpucounter
+
 
 ic = []
 my_cpu = CPU(0,0,[],[],0,[])
@@ -58,6 +149,8 @@ def JMP(x):
 
 def ADD(x):
     if x == "DAT": my_cpu.acc = my_cpu.dat+my_cpu.acc
+    if x.isnumeric():
+        my_cpu.acc=my_cpu.acc+int(x)
     pass
 
 def SUB(x):
@@ -69,6 +162,8 @@ def SUB(x):
 
 def MUL(x):
     if x == "DAT": my_cpu.acc = my_cpu.acc*my_cpu.dat
+    if x.isnumeric():
+        my_cpu.acc = my_cpu.acc*int(x)
     pass
 
 def NOT():
@@ -76,8 +171,6 @@ def NOT():
         my_cpu.acc = 100
     else:
         my_cpu.acc = 0
-def LABEL():
-    pass
 
 def DGT(x):
     pass
@@ -107,11 +200,11 @@ for i in range(n):
     line_code = CODE("","",0)
     instruction = input().upper()
     ins = instruction.split()
-    print("INS= ", ins[0], file=sys.stderr, flush=True)
+    #print("INS= ", ins[0], file=sys.stderr, flush=True)
     if ":" in ins[0]:
         my_cpu.labels[ins[0]]=i  
         instruction = instruction.replace(ins[0],"").strip()
-        print(f"LABEL= '{instruction}'", file=sys.stderr, flush=True)
+        #print(f"LABEL= '{instruction}'", file=sys.stderr, flush=True)
         if instruction=="":
             instruction="#"
 
@@ -130,7 +223,7 @@ while(my_cpu.line<n):
         ins = ic[my_cpu.line]
         my_cpu.cpucounter+=1
         jsonStr = json.dumps(my_cpu.__dict__)
-        #print(jsonStr, file=sys.stderr, flush=True)
+        print(jsonStr, file=sys.stderr, flush=True)
         i = ins.code.split()
         jsonStr = json.dumps(ins.__dict__)
         print(jsonStr, file=sys.stderr, flush=True)
