@@ -25,10 +25,11 @@ mov acc x1
 # Auto-generated code below aims at helping you parse
 # the standard input according to the problem statement.
 class CODE:
-    def __init__(self, conditional, instruction, count):
+    def __init__(self, conditional, instruction, count,status):
         self.conditional = ""
         self.code = "" # temp storage
         self.execcount = 0 # store result arithmetric instruction
+        self.status = True
     
     def __repr__(self):
         return f"'{self.conditional}' '{self.code}' {self.execcount}"
@@ -194,7 +195,7 @@ for i in input().split():
 n = int(input())
 
 for i in range(n):
-    line_code = CODE("","",0)
+    line_code = CODE("","",0,True)
     instruction = input().upper()
     ins = instruction.split()
     print("INS= ", ins[0], file=sys.stderr, flush=True)
