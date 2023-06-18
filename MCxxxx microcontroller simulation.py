@@ -170,7 +170,48 @@ def NOT():
     else:
         my_cpu.acc = 0
 
+"""
+2
+123 99
+13
+mov x0 dat
+mov dat acc
+dgt 0
+mov acc x1
+mov dat acc
+dgt 1
+mov acc x1
+mov dat acc
+dgt 2
+mov acc x1
+mov x0 acc
+dgt 2
+mov acc x1
+
+dat=123
+acc=123
+acc=1
+x1=1
+acc=123
+acc=2
+x1=2
+acc=123
+acc=3
+x1=3
+acc=99
+
+"""
+
 def DGT(x):
+    if x.isnumeric():
+        #print("DGT= ", x, my_cpu.acc, file=sys.stderr, flush=True)
+        if int(x)==2 and my_cpu.acc<=99:
+            my_cpu.acc=0
+        else:
+            #print("DGT= ", x, my_cpu.acc, file=sys.stderr, flush=True)
+            #print(x, my_cpu.acc, str(my_cpu.acc)[int(x):int(x)+1])
+            my_cpu.acc = int(str(my_cpu.acc)[len(str(my_cpu.acc))-int(x)-1])
+            #print("DGT= ", x, my_cpu.acc, file=sys.stderr, flush=True)
     pass
 
 def DST(x):
@@ -257,6 +298,8 @@ while(my_cpu.line<n):
             r = eval(f"{i[0]}('{i[1]}')")
         elif i[0] =="NOT":
             r = eval(f"{i[0]}()")
+        elif i[0] =="DGT":
+            r = eval(f"{i[0]}('{i[1]}')")
         my_cpu.line+=1
 
 # Write an answer using print
