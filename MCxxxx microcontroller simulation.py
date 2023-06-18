@@ -7,105 +7,6 @@ Line 1 : An integer K representing the length of the Input Data array
 Line 2 : K integers separated by white spaces representing your Input Data
 Line 3 : An integer N representing the number of lines of code
 Next N lines : A Line of 
-
-tc01:
-input:
-1
-2
-1
-mov x0 x1
-
-expected:
-2
-
-tc02:
-input:
-2
-1 2
-2
-mov x0 x1
-mov x0 x1
-
-output:
-1 2
-
-tc03:
-2
-1 2
-4
-mov x0 dat
-mov x0 x1
-mov dat acc
-mov acc x1
-
-2 1
-
-tc4:
-1
-3
-7
-mov x0 dat
-mov 4 acc
-add dat
-mov acc x1
-mov 4 acc
-sub dat
-mov acc x1
-
-7 1
-
-
-2
-5 7
-4
-mov x0 acc
-mov x0 dat
-mul dat
-mov acc x1
-
-4
-0 56 -3 100
-12
-mov x0 acc
-not
-mov acc x1
-mov x0 acc
-not
-mov acc x1
-mov x0 acc
-not
-mov acc x1
-mov x0 acc
-not
-mov acc x1
-
----
-1
-2
-11
-mov x0 dat
-mov dat acc
-# mov dat x1
-jmp end
-mov dat x1
-mult:
-mul dat
-jmp ending
-end: jmp mult
-ending:
-mov acc x1
-
-1
-2
-7
-mov x0 acc
-calc:
-# /╲/\( •̀ ω •́ )/\╱\
-# Look at my spider, it's so cute!
-sub 1
-@ jmp calc
-mov acc x1
-
 """
 
 # Auto-generated code below aims at helping you parse
@@ -205,13 +106,21 @@ n = int(input())
 for i in range(n):
     line_code = CODE("","",0)
     instruction = input().upper()
+    ins = instruction.split()
+    print("INS= ", ins[0], file=sys.stderr, flush=True)
+    if ":" in ins[0]:
+        my_cpu.labels[ins[0]]=i  
+        instruction = instruction.replace(ins[0],"").strip()
+        print(f"LABEL= '{instruction}'", file=sys.stderr, flush=True)
+        if instruction=="":
+            instruction="#"
+
     line_code.conditional = ""
     line_code.code = instruction
     line_code.execcount = 0
     ic.append(line_code)
-    ins = instruction.split()
-    if ":" in ins[0]:
-        my_cpu.labels[ins[0]]=i    
+    
+        
 
 print("IC= ", ic, file=sys.stderr, flush=True)
 
