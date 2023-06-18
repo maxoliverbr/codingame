@@ -170,51 +170,46 @@ def NOT():
     else:
         my_cpu.acc = 0
 
-"""
-2
-123 99
-13
-mov x0 dat
-mov dat acc
-dgt 0
-mov acc x1
-mov dat acc
-dgt 1
-mov acc x1
-mov dat acc
-dgt 2
-mov acc x1
-mov x0 acc
-dgt 2
-mov acc x1
-
-dat=123
-acc=123
-acc=1
-x1=1
-acc=123
-acc=2
-x1=2
-acc=123
-acc=3
-x1=3
-acc=99
-
-"""
 
 def DGT(x):
     if x.isnumeric():
-        #print("DGT= ", x, my_cpu.acc, file=sys.stderr, flush=True)
         if int(x)==2 and my_cpu.acc<=99:
             my_cpu.acc=0
         else:
-            #print("DGT= ", x, my_cpu.acc, file=sys.stderr, flush=True)
-            #print(x, my_cpu.acc, str(my_cpu.acc)[int(x):int(x)+1])
             my_cpu.acc = int(str(my_cpu.acc)[len(str(my_cpu.acc))-int(x)-1])
-            #print("DGT= ", x, my_cpu.acc, file=sys.stderr, flush=True)
     pass
 
-def DST(x):
+"""
+3
+0 9 0
+9
+mov x0 acc
+mov x0 dat
+dst acc dat
+dst 1 dat
+dst 2 dat
+mov acc x1
+mov x0 acc
+dst 2 dat
+mov acc x1
+
+mov x0 acc=>acc=0
+mov x0 dat=>dat=9
+dst acc dat=> dst 0 9=> acc=9
+"""
+
+
+def DST(x,y):
+    print(f"DST= {x} {y} {my_cpu.acc:08}", file=sys.stderr, flush=True)
+    mycpuaccstr = f"{my_cpu.acc:08}"
+    if   x.isnumeric() and y.isnumeric():  
+        mycpuaccstr = mycpuaccstr[:int(x)] + chr(y) + mycpuaccstr[int(x)+1:]
+        my_cpu.acc = int(mycpuaccstr[::-1])
+    elif x.isnumeric() and y=="DAT":
+        mycpuaccstr = mycpuaccstr[:int(x)] + str(my_cpu.dat) + mycpuaccstr[int(x)+1:]
+        print(f"DST= {x} {y} {my_cpu.dat} {my_cpu.acc:08} {mycpuaccstr} ", file=sys.stderr, flush=True)    
+        my_cpu.acc = int(mycpuaccstr[::-1])
+    print(f"DST= {x} {y} {my_cpu.acc:08} {mycpuaccstr}", file=sys.stderr, flush=True)
     pass
 
 def TEQ(x,y):
@@ -300,6 +295,9 @@ while(my_cpu.line<n):
             r = eval(f"{i[0]}()")
         elif i[0] =="DGT":
             r = eval(f"{i[0]}('{i[1]}')")
+        elif i[0] =="DST":
+            r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
+        
         my_cpu.line+=1
 
 # Write an answer using print
