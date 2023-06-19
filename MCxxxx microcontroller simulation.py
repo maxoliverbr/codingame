@@ -6,33 +6,7 @@ import re
 
 def is_number(s):
     return bool(re.match(r'^-?\d+(?:\.\d+)?$', s))
-"""
-Line 1 : An integer K representing the length of the Input Data array
-Line 2 : K integers separated by white spaces representing your Input Data
-Line 3 : An integer N representing the number of lines of code
-Next N lines : A Line of 
 
-2
-2 1
-11
-# Print all power of 2 from 1 to 512
-mov x0 dat
-mov x0 acc 
-# dat = 2, acc = 1
-loop:
-mov acc x1
-# print content of acc
-mul dat
-tlt acc 512
-+ jmp loop
-mov acc x1
-
-1 2 4 8 16 32 64 128 256 512
-
-"""
-
-# Auto-generated code below aims at helping you parse
-# the standard input according to the problem statement.
 class CODE:
     def __init__(self, conditional, instruction, count):
         self.conditional = ""
@@ -140,7 +114,6 @@ my_cpu = CPU(0,0,[],[],0,[])
 
 
 def MOV(x,y):
-    #print("MOV= ",x,y,my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
     if x == "X0" and y=="X1": my_cpu.x1.append(my_cpu.x0.pop(0))
     if x == "X0" and y=="DAT": my_cpu.dat=my_cpu.x0.pop(0)
     if x == "X0" and y=="ACC": my_cpu.acc=my_cpu.x0.pop(0)
@@ -148,33 +121,31 @@ def MOV(x,y):
     if x == "ACC" and y=="X1": my_cpu.x1.append(my_cpu.acc)
     if is_number(x) and y=="ACC": my_cpu.acc = int(x)
     if is_number(x) and y=="X1": my_cpu.x1.append(int(x))
-    #print(my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
-    pass
+    
 
 def JMP(x):
     x=x+":"
     if x in my_cpu.labels:
         my_cpu.line = my_cpu.labels[x]
-    pass
+    
 
 def ADD(x):
     if x == "DAT": my_cpu.acc = my_cpu.dat+my_cpu.acc
     if is_number(x):
         my_cpu.acc=my_cpu.acc+int(x)
-    pass
+    
 
 def SUB(x):
-    #print("SUB= ", x, my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
     if x == "DAT": my_cpu.acc = my_cpu.acc-my_cpu.dat
     elif is_number(x):
         my_cpu.acc = my_cpu.acc-int(x)
-    pass
+
 
 def MUL(x):
     if x == "DAT": my_cpu.acc = my_cpu.acc*my_cpu.dat
     if is_number(x):
         my_cpu.acc = my_cpu.acc*int(x)
-    pass
+    
 
 def NOT():
     if my_cpu.acc == 0:
@@ -189,11 +160,9 @@ def DGT(x):
             my_cpu.acc=0
         else:
             my_cpu.acc = int(str(my_cpu.acc)[len(str(my_cpu.acc))-int(x)-1])
-    pass
 
 
 def DST(x,y):
-    #print(f"DST= {x} {y} {my_cpu.acc:08}", file=sys.stderr, flush=True)
     mycpuaccstr = f"{my_cpu.acc:08}"
     if   is_number(x) and is_number(y):  
         mycpuaccstr = mycpuaccstr[:int(x)] + chr(y) + mycpuaccstr[int(x)+1:]
@@ -201,8 +170,7 @@ def DST(x,y):
     elif is_number(x) and y=="DAT":
         mycpuaccstr = mycpuaccstr[:int(x)] + str(my_cpu.dat) + mycpuaccstr[int(x)+1:]
         my_cpu.acc = int(mycpuaccstr[::-1])
-    #print(f"DST= {x} {y} {my_cpu.acc:08} {mycpuaccstr}", file=sys.stderr, flush=True)
-    pass
+
 
 def TEQ(x,y):
     if x=="DAT" and is_number(y):
@@ -210,37 +178,13 @@ def TEQ(x,y):
             my_cpu.teq = True
         else:
             my_cpu.teq = False
-    print("TEQ= ", x, y, my_cpu.teq, file=sys.stderr, flush=True)
-
-    pass
 
 def TGT(x,y):
     if x=="DAT" and is_number(y):
         if my_cpu.dat>int(y):
             my_cpu.tgt = True
         else:
-            my_cpu.tgt = False
-    print("TGT= ", x, y, my_cpu.tgt, file=sys.stderr, flush=True)            
-    pass
-
-"""
-2
-2 1
-11
-# Print all power of 2 from 1 to 512
-mov x0 dat
-mov x0 acc 
-# dat = 2, acc = 1
-loop:
-mov acc x1
-# print content of acc
-mul dat
-tlt acc 512
-+ jmp loop
-mov acc x1
-
-1 2 4 8 16 32 64 128 256 512
-"""
+            my_cpu.tgt = False    
 
 def TLT(x,y):
     if x=="DAT" and is_number(y):
@@ -254,10 +198,8 @@ def TLT(x,y):
         else:
             my_cpu.tlt=False
     print("TLT= ", x, my_cpu.acc, y,  my_cpu.tlt, file=sys.stderr, flush=True)                        
-    pass
 
 def TCP(x,y):
-    #print(f"TCP= 'dat={my_cpu.dat}' y='{int(y)}'  '{my_cpu.tcp}'", file=sys.stderr, flush=True)  
     if x == "DAT" and is_number(y):
         if (my_cpu.dat>int(y))==True:
             print(f"TCP01 '1'", file=sys.stderr, flush=True)                        
@@ -268,8 +210,6 @@ def TCP(x,y):
         elif my_cpu.dat<int(y):
             print(f"TCP-1= '-1'", file=sys.stderr, flush=True)                        
             my_cpu.tcp=-1 # +disabled -enabled
-    #print(f"TCP= 'dat={my_cpu.dat}' y='{int(y)}'  '{my_cpu.tcp}'", file=sys.stderr, flush=True)  
-    pass
 
 k = int(input())
 for i in input().split():
@@ -281,11 +221,9 @@ for i in range(n):
     line_code = CODE("","",0)
     instruction = input().upper()
     ins = instruction.split()
-    #print("INS= ", ins[0], file=sys.stderr, flush=True)
     if ":" in ins[0]:
         my_cpu.labels[ins[0]]=i  
         instruction = instruction.replace(ins[0],"").strip()
-        #print(f"LABEL= '{instruction}'", file=sys.stderr, flush=True)
         if instruction=="":
             instruction="#"
         line_code.conditional = ""
@@ -301,16 +239,11 @@ for i in range(n):
         line_code.execcount = 0
     ic.append(line_code)
     
-        
-
-#print("IC= ", ic, file=sys.stderr, flush=True)
 
 while(my_cpu.line<n):
-    #for ins in ic:
-        print(f"CPU X0={my_cpu.x0} X1={my_cpu.x1} DAT='{my_cpu.dat}' ACC='{my_cpu.acc}'", file=sys.stderr, flush=True)
-        #print(f"TCP={my_cpu.tcp}", file=sys.stderr, flush=True)
+        #print(f"CPU X0={my_cpu.x0} X1={my_cpu.x1} DAT='{my_cpu.dat}' ACC='{my_cpu.acc}'", file=sys.stderr, flush=True)
         ins = ic[my_cpu.line]
-        print(f"INS={ins.conditional} {ins.code}", file=sys.stderr, flush=True)
+        #print(f"INS={ins.conditional} {ins.code}", file=sys.stderr, flush=True)
         my_cpu.cpucounter+=1
         #jsonStr = json.dumps(my_cpu.__dict__)
         #print(jsonStr, file=sys.stderr, flush=True)
@@ -353,7 +286,6 @@ while(my_cpu.line<n):
             if i[0] == "#":
                 pass
             elif i[0] == "@":
-                #print("@ jmp calc",ins, file=sys.stderr, flush=True)
                 if ins.execcount == 1:
                     print("@ NO EXEC ",ins, file=sys.stderr, flush=True)
                     pass
@@ -385,8 +317,5 @@ while(my_cpu.line<n):
             elif i[0] =="TCP":
                 r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
             my_cpu.line+=1
-
-# Write an answer using print
-# To debug: print("Debug messages...", file=sys.stderr, flush=True)
 
 print(*my_cpu.x1)
