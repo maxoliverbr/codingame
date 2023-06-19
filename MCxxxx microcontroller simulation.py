@@ -25,12 +25,11 @@ mov acc x1
 # Auto-generated code below aims at helping you parse
 # the standard input according to the problem statement.
 class CODE:
-    def __init__(self, conditional, instruction, count,status):
+    def __init__(self, conditional, instruction, count):
         self.conditional = ""
         self.code = "" # temp storage
         self.execcount = 0 # store result arithmetric instruction
-        self.status = True
-    
+        
     def __repr__(self):
         return f"'{self.conditional}' '{self.code}' {self.execcount}"
     
@@ -44,6 +43,11 @@ class CPU:
         self._line = 0
         self._labels = {}
         self._cpucounter = 0
+        self.teq = False
+        self.tgt = False
+        self.tlt = False
+        self.tcp = False
+    
     
     @property
     def x0(self):
@@ -127,8 +131,7 @@ my_cpu = CPU(0,0,[],[],0,[])
 
 
 def MOV(x,y):
-    print("MOV= ",x,y,my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
-
+    #print("MOV= ",x,y,my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
     if x == "X0" and y=="X1": my_cpu.x1.append(my_cpu.x0.pop(0))
     if x == "X0" and y=="DAT": my_cpu.dat=my_cpu.x0.pop(0)
     if x == "X0" and y=="ACC": my_cpu.acc=my_cpu.x0.pop(0)
@@ -179,40 +182,49 @@ def DGT(x):
             my_cpu.acc = int(str(my_cpu.acc)[len(str(my_cpu.acc))-int(x)-1])
     pass
 
-"""
-3
-0 9 0
-9
-mov x0 acc
-mov x0 dat
-dst acc dat
-dst 1 dat
-dst 2 dat
-mov acc x1
-mov x0 acc
-dst 2 dat
-mov acc x1
-
-mov x0 acc=>acc=0
-mov x0 dat=>dat=9
-dst acc dat=> dst 0 9=> acc=9
-"""
-
 
 def DST(x,y):
-    print(f"DST= {x} {y} {my_cpu.acc:08}", file=sys.stderr, flush=True)
+    #print(f"DST= {x} {y} {my_cpu.acc:08}", file=sys.stderr, flush=True)
     mycpuaccstr = f"{my_cpu.acc:08}"
     if   x.isnumeric() and y.isnumeric():  
         mycpuaccstr = mycpuaccstr[:int(x)] + chr(y) + mycpuaccstr[int(x)+1:]
         my_cpu.acc = int(mycpuaccstr[::-1])
     elif x.isnumeric() and y=="DAT":
         mycpuaccstr = mycpuaccstr[:int(x)] + str(my_cpu.dat) + mycpuaccstr[int(x)+1:]
-        print(f"DST= {x} {y} {my_cpu.dat} {my_cpu.acc:08} {mycpuaccstr} ", file=sys.stderr, flush=True)    
         my_cpu.acc = int(mycpuaccstr[::-1])
-    print(f"DST= {x} {y} {my_cpu.acc:08} {mycpuaccstr}", file=sys.stderr, flush=True)
+    #print(f"DST= {x} {y} {my_cpu.acc:08} {mycpuaccstr}", file=sys.stderr, flush=True)
     pass
 
+
+"""
+
+1
+4
+7
+mov x0 dat
++ mov dat x1
+- mov dat x1
+teq dat 0
++ add 1
+- sub 1
+mov acc x1
+
+out:
+-1
+
+mov x0 dat->dat=4
+teq dat 0->False
+sub 1->acc-1=-1
+mov acc x1->x1=-1
+
+"""
+
 def TEQ(x,y):
+    if x=="DAT" and y.isnumeric():
+        if my_cpu.dat == int(y):
+            my_cpu.teq = True
+    print("TEQ= ", x, y, my_cpu.teq, file=sys.stderr, flush=True)
+
     pass
 
 def TGT(x,y):
@@ -231,7 +243,7 @@ for i in input().split():
 n = int(input())
 
 for i in range(n):
-    line_code = CODE("","",0,True)
+    line_code = CODE("","",0)
     instruction = input().upper()
     ins = instruction.split()
     print("INS= ", ins[0], file=sys.stderr, flush=True)
@@ -260,17 +272,19 @@ print("IC= ", ic, file=sys.stderr, flush=True)
 
 while(my_cpu.line<n):
     #for ins in ic:
-        print("CPU= ", my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
+        #print("CPU= ", my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
         ins = ic[my_cpu.line]
         my_cpu.cpucounter+=1
-        jsonStr = json.dumps(my_cpu.__dict__)
-        print(jsonStr, file=sys.stderr, flush=True)
+        #jsonStr = json.dumps(my_cpu.__dict__)
+        #print(jsonStr, file=sys.stderr, flush=True)
+        #jsonStr = json.dumps(ins.__dict__)
+        #print(jsonStr, file=sys.stderr, flush=True)
+        
         i = ins.code.split()
-        jsonStr = json.dumps(ins.__dict__)
-        print(jsonStr, file=sys.stderr, flush=True)
+
         if i[0] == "#":
             pass
-        if i[0] == "@":
+        elif i[0] == "@":
             #print("@ jmp calc",ins, file=sys.stderr, flush=True)
             if ins.execcount == 1:
                 print("@ NO EXEC ",ins, file=sys.stderr, flush=True)
@@ -297,7 +311,9 @@ while(my_cpu.line<n):
             r = eval(f"{i[0]}('{i[1]}')")
         elif i[0] =="DST":
             r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
-        
+        elif i[0] =="TEQ":
+            r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
+
         my_cpu.line+=1
 
 # Write an answer using print
