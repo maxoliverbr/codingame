@@ -238,6 +238,8 @@ mul dat
 tlt acc 512
 + jmp loop
 mov acc x1
+
+1 2 4 8 16 32 64 128 256 512
 """
 
 def TLT(x,y):
@@ -251,7 +253,7 @@ def TLT(x,y):
             my_cpu.tlt=True
         else:
             my_cpu.tlt=False
-    print("TLT= ", x, y, my_cpu.tlt, file=sys.stderr, flush=True)                        
+    print("TLT= ", x, my_cpu.acc, y,  my_cpu.tlt, file=sys.stderr, flush=True)                        
     pass
 
 def TCP(x,y):
@@ -306,7 +308,7 @@ for i in range(n):
 while(my_cpu.line<n):
     #for ins in ic:
         print(f"CPU X0={my_cpu.x0} X1={my_cpu.x1} DAT='{my_cpu.dat}' ACC='{my_cpu.acc}'", file=sys.stderr, flush=True)
-        print(f"TCP={my_cpu.tcp}", file=sys.stderr, flush=True)
+        #print(f"TCP={my_cpu.tcp}", file=sys.stderr, flush=True)
         ins = ic[my_cpu.line]
         print(f"INS={ins.conditional} {ins.code}", file=sys.stderr, flush=True)
         my_cpu.cpucounter+=1
@@ -325,6 +327,12 @@ while(my_cpu.line<n):
             my_cpu.line+=1
             continue
         elif my_cpu.tgt == False and ins.conditional=="+":
+            my_cpu.line+=1
+            continue
+        elif my_cpu.tlt == True and ins.conditional=="-":
+            my_cpu.line+=1
+            continue
+        elif my_cpu.tlt == False and ins.conditional=="+":
             my_cpu.line+=1
             continue
         elif my_cpu.tcp == 1 and ins.conditional=="-":
