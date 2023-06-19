@@ -177,57 +177,38 @@ def NOT():
 
 def DGT(x):
     if is_number(x):
-        if int(x)==2 and my_cpu.acc<=99:
+        if int(x)>=2 and my_cpu.acc<=99:
             my_cpu.acc=0
         else:
             my_cpu.acc = int(str(my_cpu.acc)[len(str(my_cpu.acc))-int(x)-1])
 
-"""
-3
-0 9 0
-9
-mov x0 acc
-mov x0 dat
-dst acc dat
-dst 1 dat
-dst 2 dat
-mov acc x1
-mov x0 acc
-dst 2 dat
-mov acc x1
-"""
 
 def DST(x,y):
     
-    """
-     | acc | Instruction | acc' |
-     | 596 |  dst 0 7    | 597  |
-     | 596 |  dst 1 7    | 576  |
-     | 596 |  dst 2 7    | 796  |
-     dst 1 1
-     dst 1 dat
-     dst dat 1
-     dst acc 1
-     dst 1 acc
-     dst x0 dat
-     dst x0 acc
-     dst x0 1
-     dst 1 x0
-    """
-
     mycpuaccstr = f"{my_cpu.acc:08}"
+    mycpuacclist = list(mycpuaccstr)
+
     if  is_number(x) and is_number(y):  
-        mycpuaccstr = mycpuaccstr[:int(x)] + str(y) + mycpuaccstr[int(x)+1:]
-    elif is_number(x) and y=="DAT":
-        mycpuaccstr = mycpuaccstr[:int(x)] + str(my_cpu.dat) + mycpuaccstr[int(x)+1:]
+        mycpuacclist[8-int(x)-1]=y
+        mycpuaccstr = "".join(mycpuacclist)
+    elif is_number(x) and y=="DAT":    
+        mycpuacclist[8-int(x)-1]=str(my_cpu.dat)
+        mycpuaccstr = "".join(mycpuacclist)
     elif x=="DAT" and is_number(y):
-        mycpuaccstr = mycpuaccstr[:int(my_cpu.dat)] + str(y) + mycpuaccstr[int(my_cpu.dat)+1:]
+        mycpuacclist[8-int(my_cpu.dat)-1]=y
+        mycpuaccstr = "".join(mycpuacclist)
     elif is_number(x) and y=="ACC":
-        mycpuaccstr = mycpuaccstr[:int(x)] + str(my_cpu.acc) + mycpuaccstr[int(x)+1:]
+        mycpuacclist[8-int(x)-1]=str(my_cpu.acc)
+        mycpuaccstr = "".join(mycpuacclist)
     elif x=="ACC" and is_number(y):
-        mycpuaccstr = mycpuaccstr[:int(my_cpu.acc)] + str(y) + mycpuaccstr[int(my_cpu.acc)+1:]
-        
-    my_cpu.acc = int(mycpuaccstr[::-1])
+        mycpuacclist[8-int(my_cpu.acc)-1]=y
+        mycpuaccstr = "".join(mycpuacclist)
+    elif x=="ACC" and y=="DAT":
+        mycpuacclist[8-int(my_cpu.acc)-1]=str(my_cpu.dat)
+        mycpuaccstr = "".join(mycpuacclist)
+    my_cpu.acc = int(mycpuaccstr)
+    
+
 
 def TEQ(x,y):
     if x=="DAT" and is_number(y):
@@ -331,7 +312,7 @@ for i in range(n):
     
 
 while(my_cpu.line<n):
-        #print(f"CPU X0={my_cpu.x0} X1={my_cpu.x1} DAT='{my_cpu.dat}' ACC='{my_cpu.acc}'", file=sys.stderr, flush=True)
+        print(f"CPU X0={my_cpu.x0} X1={my_cpu.x1} DAT='{my_cpu.dat}' ACC='{my_cpu.acc}'", file=sys.stderr, flush=True)
         ins = ic[my_cpu.line]
         #print(f"INS={ins.conditional} {ins.code}", file=sys.stderr, flush=True)
         my_cpu.cpucounter+=1
@@ -340,7 +321,7 @@ while(my_cpu.line<n):
         #jsonStr = json.dumps(ins.__dict__)
         #print(jsonStr, file=sys.stderr, flush=True)
         
-        print(f"TEQ={my_cpu.teq} {ins.conditional} {ins.code}", file=sys.stderr, flush=True)
+        #print(f"TEQ={my_cpu.teq} {ins.conditional} {ins.code}", file=sys.stderr, flush=True)
         
         if (my_cpu.teq == None and my_cpu.tgt == None and my_cpu.tlt == None and my_cpu.tcp == None) and (ins.conditional == "+" or ins.conditional == "-"):
             my_cpu.line+=1
@@ -375,7 +356,7 @@ while(my_cpu.line<n):
             continue
         else:
             i = ins.code.split()
-            print(f"i={i[0]} {ins.code}", file=sys.stderr, flush=True)
+            #print(f"i={i[0]} {ins.code}", file=sys.stderr, flush=True)
             if i[0] == "@":
                 if ins.execcount == 1:
                     print("@ NO EXEC ",ins, file=sys.stderr, flush=True)
