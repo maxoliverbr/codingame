@@ -182,16 +182,52 @@ def DGT(x):
         else:
             my_cpu.acc = int(str(my_cpu.acc)[len(str(my_cpu.acc))-int(x)-1])
 
+"""
+3
+0 9 0
+9
+mov x0 acc
+mov x0 dat
+dst acc dat
+dst 1 dat
+dst 2 dat
+mov acc x1
+mov x0 acc
+dst 2 dat
+mov acc x1
+"""
 
 def DST(x,y):
+    
+    """
+     | acc | Instruction | acc' |
+     | 596 |  dst 0 7    | 597  |
+     | 596 |  dst 1 7    | 576  |
+     | 596 |  dst 2 7    | 796  |
+     dst 1 1
+     dst 1 dat
+     dst dat 1
+     dst acc 1
+     dst 1 acc
+     dst x0 dat
+     dst x0 acc
+     dst x0 1
+     dst 1 x0
+    """
+
     mycpuaccstr = f"{my_cpu.acc:08}"
-    if   is_number(x) and is_number(y):  
-        mycpuaccstr = mycpuaccstr[:int(x)] + chr(y) + mycpuaccstr[int(x)+1:]
-        my_cpu.acc = int(mycpuaccstr[::-1])
+    if  is_number(x) and is_number(y):  
+        mycpuaccstr = mycpuaccstr[:int(x)] + str(y) + mycpuaccstr[int(x)+1:]
     elif is_number(x) and y=="DAT":
         mycpuaccstr = mycpuaccstr[:int(x)] + str(my_cpu.dat) + mycpuaccstr[int(x)+1:]
-        my_cpu.acc = int(mycpuaccstr[::-1])
-
+    elif x=="DAT" and is_number(y):
+        mycpuaccstr = mycpuaccstr[:int(my_cpu.dat)] + str(y) + mycpuaccstr[int(my_cpu.dat)+1:]
+    elif is_number(x) and y=="ACC":
+        mycpuaccstr = mycpuaccstr[:int(x)] + str(my_cpu.acc) + mycpuaccstr[int(x)+1:]
+    elif x=="ACC" and is_number(y):
+        mycpuaccstr = mycpuaccstr[:int(my_cpu.acc)] + str(y) + mycpuaccstr[int(my_cpu.acc)+1:]
+        
+    my_cpu.acc = int(mycpuaccstr[::-1])
 
 def TEQ(x,y):
     if x=="DAT" and is_number(y):
@@ -205,15 +241,43 @@ def TEQ(x,y):
         else:
             my_cpu.teq = False
 
+"""
+1
+0
+7
+mov x0 dat
+tgt dat -1
++ mov 1 x1
+- mov -1 x1
+tlt dat 1
++ mov 1 x1
+- mov -1 x1
+"""
+
 def TGT(x,y):
-    if x=="DAT" and is_number(y):
+    if is_number(x) and is_number(y):
+        if int(x)>int(y):
+            my_cpu.tgt = True
+        else:
+            my_cpu.tgt = False
+    elif x=="DAT" and is_number(y):
         if my_cpu.dat>int(y):
+            my_cpu.tgt = True
+        else:
+            my_cpu.tgt = False    
+    elif x=="ACC" and is_number(y):
+        if my_cpu.acc>int(y):
             my_cpu.tgt = True
         else:
             my_cpu.tgt = False    
 
 def TLT(x,y):
-    if x=="DAT" and is_number(y):
+    if is_number(x) and is_number(y):
+        if int(x)<int(y):
+            my_cpu.tlt = True
+        else:
+            my_cpu.tlt = False
+    elif x=="DAT" and is_number(y):
         if my_cpu.dat<int(y):
             my_cpu.tlt=True
         else:
