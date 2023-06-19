@@ -12,17 +12,22 @@ Line 2 : K integers separated by white spaces representing your Input Data
 Line 3 : An integer N representing the number of lines of code
 Next N lines : A Line of 
 
-1
-4
-7
+2
+2 1
+11
+# Print all power of 2 from 1 to 512
 mov x0 dat
-+ mov dat x1
-- mov dat x1
-teq dat 0
-+ add 1
-- sub 1
+mov x0 acc 
+# dat = 2, acc = 1
+loop:
+mov acc x1
+# print content of acc
+mul dat
+tlt acc 512
++ jmp loop
 mov acc x1
 
+1 2 4 8 16 32 64 128 256 512
 
 """
 
@@ -199,30 +204,6 @@ def DST(x,y):
     #print(f"DST= {x} {y} {my_cpu.acc:08} {mycpuaccstr}", file=sys.stderr, flush=True)
     pass
 
-
-"""
-
-1
-4
-7
-mov x0 dat
-+ mov dat x1
-- mov dat x1
-teq dat 0
-+ add 1
-- sub 1
-mov acc x1
-
-out:
--1
-
-mov x0 dat->dat=4
-teq dat 0->False
-sub 1->acc-1=-1
-mov acc x1->x1=-1
-
-"""
-
 def TEQ(x,y):
     if x=="DAT" and is_number(y):
         if my_cpu.dat == int(y):
@@ -233,27 +214,6 @@ def TEQ(x,y):
 
     pass
 
-
-
-"""
-1
-0
-7
-mov x0 dat
-tgt dat -1
-+ mov 1 x1
-- mov -1 x1
-tlt dat 1
-+ mov 1 x1
-- mov -1 x1
-
-mov x0 dat-> dat = 0
-tgt dat -1-> True
-mov -1 x1-> x1= 1
-tlt dat 1-> True
-mov 1 x1 -> x1 = 1 1
-
-"""
 def TGT(x,y):
     if x=="DAT" and is_number(y):
         if my_cpu.dat>int(y):
@@ -263,43 +223,36 @@ def TGT(x,y):
     print("TGT= ", x, y, my_cpu.tgt, file=sys.stderr, flush=True)            
     pass
 
+"""
+2
+2 1
+11
+# Print all power of 2 from 1 to 512
+mov x0 dat
+mov x0 acc 
+# dat = 2, acc = 1
+loop:
+mov acc x1
+# print content of acc
+mul dat
+tlt acc 512
++ jmp loop
+mov acc x1
+"""
+
 def TLT(x,y):
     if x=="DAT" and is_number(y):
         if my_cpu.dat<int(y):
             my_cpu.tlt=True
         else:
             my_cpu.tlt=False
+    elif x == "ACC" and is_number(y):
+        if my_cpu.acc<int(y):
+            my_cpu.tlt=True
+        else:
+            my_cpu.tlt=False
     print("TLT= ", x, y, my_cpu.tlt, file=sys.stderr, flush=True)                        
     pass
-
-
-"""
-1
-0
-10
-mov x0 dat
-tcp dat -1
-+ mov 1 x1
-- mov -1 x1
-tcp dat 0
-+ mov 1 x1
-- mov -1 x1
-tcp dat 1
-+ mov 1 x1
-- mov -1 x1
-
-mov x0 dat->dat=0
-tcp dat -1-> 0>-1 #+enabled -disabled
-+mov 1 x1-> x1 = 1
--mov -1 x1-> skipped
-tcp dat 0-> 0=0 #+disabled -disabled
-+ mov 1 x1 - skipped
-- mov 1 x1 - skipped
-tcp dat 1->-1<1 #+disabled -enabled
-+ mov 1 x1 -> skipped
-- mov -1 x1-> 1 -1
-
-"""
 
 def TCP(x,y):
     #print(f"TCP= 'dat={my_cpu.dat}' y='{int(y)}'  '{my_cpu.tcp}'", file=sys.stderr, flush=True)  
