@@ -252,6 +252,12 @@ def TGT(x,y):
         else:
             my_cpu.tgt = False    
 
+    my_cpu.teq = None
+    my_cpu.tlt = None
+    my_cpu.tcp = None
+
+    print("TGT= ", x, my_cpu.dat, y,  my_cpu.tgt, file=sys.stderr, flush=True)                        
+
 def TLT(x,y):
     if is_number(x) and is_number(y):
         if int(x)<int(y):
@@ -268,7 +274,12 @@ def TLT(x,y):
             my_cpu.tlt=True
         else:
             my_cpu.tlt=False
-    print("TLT= ", x, my_cpu.acc, y,  my_cpu.tlt, file=sys.stderr, flush=True)                        
+    
+    my_cpu.teq = None
+    my_cpu.tgt = None
+    my_cpu.tcp = None
+    
+    print("TLT= ", x, my_cpu.dat, y,  my_cpu.tlt, file=sys.stderr, flush=True)                        
 
 def TCP(x,y):
     if x == "DAT" and is_number(y):
