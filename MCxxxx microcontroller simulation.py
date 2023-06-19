@@ -112,13 +112,34 @@ class CPU:
 ic = []
 my_cpu = CPU(0,0,[],[],0,[])
 
+"""
+1
+4
+7
+mov x0 dat - dat = 4
++ mov dat x1
+- mov dat x1
+teq dat 0
++ add 1
+- sub 1
+mov acc x1
+
+
+"""
+
 
 def MOV(x,y):
     if x == "X0" and y=="X1": my_cpu.x1.append(my_cpu.x0.pop(0))
     if x == "X0" and y=="DAT": my_cpu.dat=my_cpu.x0.pop(0)
     if x == "X0" and y=="ACC": my_cpu.acc=my_cpu.x0.pop(0)
+
     if x == "DAT" and y=="ACC": my_cpu.acc=my_cpu.dat
+    if x == "ACC" and y=="DAT": my_cpu.dat=my_cpu.acc
+    
     if x == "ACC" and y=="X1": my_cpu.x1.append(my_cpu.acc)
+    if x == "DAT" and y=="X1": my_cpu.x1.append(my_cpu.dat)
+    
+    if is_number(x) and y=="DAT": my_cpu.dat = int(x)
     if is_number(x) and y=="ACC": my_cpu.acc = int(x)
     if is_number(x) and y=="X1": my_cpu.x1.append(int(x))
     
@@ -175,6 +196,11 @@ def DST(x,y):
 def TEQ(x,y):
     if x=="DAT" and is_number(y):
         if my_cpu.dat == int(y):
+            my_cpu.teq = True
+        else:
+            my_cpu.teq = False
+    elif x=="ACC" and is_number(y):
+        if my_cpu.acc == int(y):
             my_cpu.teq = True
         else:
             my_cpu.teq = False
@@ -250,6 +276,12 @@ while(my_cpu.line<n):
         #jsonStr = json.dumps(ins.__dict__)
         #print(jsonStr, file=sys.stderr, flush=True)
         
+        print(f"TEQ={my_cpu.teq} {ins.conditional} {ins.code}", file=sys.stderr, flush=True)
+        
+        if (my_cpu.teq == None and my_cpu.tgt == None and my_cpu.tlt == None and my_cpu.tcp == None) and (ins.conditional == "+" or ins.conditional == "-"):
+            my_cpu.line+=1
+            continue
+
         if my_cpu.teq == True and ins.conditional=="-":
             my_cpu.line+=1
             continue
@@ -269,32 +301,24 @@ while(my_cpu.line<n):
             my_cpu.line+=1
             continue
         elif my_cpu.tcp == 1 and ins.conditional=="-":
-            print(f"CODE={ins.conditional} {ins.code} skipped", file=sys.stderr, flush=True)
             my_cpu.line+=1
             continue
         elif my_cpu.tcp == -1 and ins.conditional=="+":
-            print(f"CODE={ins.conditional} {ins.code} skipped", file=sys.stderr, flush=True)
             my_cpu.line+=1
             continue
         elif my_cpu.tcp == 0 and (ins.conditional=="+" or ins.conditional=="-"):
-            print(f"CODE={ins.conditional} {ins.code} skipped", file=sys.stderr, flush=True)
             my_cpu.line+=1
             continue
         else:
             i = ins.code.split()
             print(f"i={i[0]} {ins.code}", file=sys.stderr, flush=True)
-            if i[0] == "#":
-                pass
-            elif i[0] == "@":
+            if i[0] == "@":
                 if ins.execcount == 1:
                     print("@ NO EXEC ",ins, file=sys.stderr, flush=True)
-                    pass
                 else:
                     ins.execcount = 1
                     r = eval(f"{i[1]}('{i[2]}')")
                     continue
-            elif ":" in i[0]:
-                pass
             elif i[0] == "JMP":
                 r = eval(f"{i[0]}('{i[1]}')")
                 continue
