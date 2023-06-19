@@ -43,10 +43,10 @@ class CPU:
         self._line = 0
         self._labels = {}
         self._cpucounter = 0
-        self.teq = False
-        self.tgt = False
-        self.tlt = False
-        self.tcp = False
+        self.teq = None
+        self.tgt = None
+        self.tlt = None
+        self.tcp = None
     
     
     @property
@@ -223,15 +223,67 @@ def TEQ(x,y):
     if x=="DAT" and y.isnumeric():
         if my_cpu.dat == int(y):
             my_cpu.teq = True
+        else:
+            my_cpu.teq = False
     print("TEQ= ", x, y, my_cpu.teq, file=sys.stderr, flush=True)
 
     pass
 
+
+
+"""
+1
+0
+7
+mov x0 dat
+tgt dat -1
++ mov 1 x1
+- mov -1 x1
+tlt dat 1
++ mov 1 x1
+- mov -1 x1
+
+mov x0 dat-> dat = 0
+tgt dat -1-> True
+mov -1 x1-> x1= 1
+tlt dat 1-> True
+mov 1 x1 -> x1 = 1 1
+
+"""
 def TGT(x,y):
+    if x=="DAT" and y.isnumeric():
+        if my_cpu.dat>int(y):
+            my_cpu.tgt = True
+        else:
+            my_cpu.tgt = False
+    print("TGT= ", x, y, my_cpu.tgt, file=sys.stderr, flush=True)            
     pass
 
 def TLT(x,y):
+    if x=="DAT" and y.isnumeric():
+        if my_cpu.dat<int(y):
+            my_cpu.tlt=True
+        else:
+            my_cpu.tlt=False
+    print("TLT= ", x, y, my_cpu.tlt, file=sys.stderr, flush=True)                        
     pass
+
+
+"""
+1
+0
+10
+mov x0 dat
+tcp dat -1
++ mov 1 x1
+- mov -1 x1
+tcp dat 0
++ mov 1 x1
+- mov -1 x1
+tcp dat 1
++ mov 1 x1
+- mov -1 x1
+"""
 
 def TCP(x,y):
     pass
@@ -272,49 +324,62 @@ print("IC= ", ic, file=sys.stderr, flush=True)
 
 while(my_cpu.line<n):
     #for ins in ic:
-        #print("CPU= ", my_cpu.x0, my_cpu.x1, my_cpu.dat, my_cpu.acc, file=sys.stderr, flush=True)
+        print(f"CPU X0={my_cpu.x0} X1={my_cpu.x1} DAT='{my_cpu.dat}' ACC='{my_cpu.acc}'", file=sys.stderr, flush=True)
         ins = ic[my_cpu.line]
         my_cpu.cpucounter+=1
         #jsonStr = json.dumps(my_cpu.__dict__)
         #print(jsonStr, file=sys.stderr, flush=True)
         #jsonStr = json.dumps(ins.__dict__)
         #print(jsonStr, file=sys.stderr, flush=True)
-        
-        i = ins.code.split()
 
-        if i[0] == "#":
-            pass
-        elif i[0] == "@":
-            #print("@ jmp calc",ins, file=sys.stderr, flush=True)
-            if ins.execcount == 1:
-                print("@ NO EXEC ",ins, file=sys.stderr, flush=True)
-                pass
-            else:
-                #print("@ jmp calc 1",my_cpu.line, file=sys.stderr, flush=True)
-                ins.execcount = 1
-                r = eval(f"{i[1]}('{i[2]}')")
-                #print("@ jmp calc 1",my_cpu.line, file=sys.stderr, flush=True)
-                continue
-        elif ":" in i[0]:
-            #r = eval(f"{i[1]}('{i[2]}','{i[3]}')")
-            pass
-        elif i[0] == "JMP":
-            r = eval(f"{i[0]}('{i[1]}')")
+        if my_cpu.teq == True and ins.conditional=="-":
+            my_cpu.line+=1
             continue
-        elif i[0] == "MOV":
-            r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
-        elif i[0] =="ADD" or i[0] == "SUB" or i[0]=="MUL":
-            r = eval(f"{i[0]}('{i[1]}')")
-        elif i[0] =="NOT":
-            r = eval(f"{i[0]}()")
-        elif i[0] =="DGT":
-            r = eval(f"{i[0]}('{i[1]}')")
-        elif i[0] =="DST":
-            r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
-        elif i[0] =="TEQ":
-            r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
+        elif my_cpu.teq == False and ins.conditional=="+":
+            my_cpu.line+=1
+            continue
+        elif my_cpu.tgt == True and ins.conditional=="-":
+            my_cpu.line+=1
+            continue
+        elif my_cpu.tgt == False and ins.conditional=="+":
+            my_cpu.line+=1
+            continue
+        else:
+            i = ins.code.split()
+            if i[0] == "#":
+                pass
+            elif i[0] == "@":
+                #print("@ jmp calc",ins, file=sys.stderr, flush=True)
+                if ins.execcount == 1:
+                    print("@ NO EXEC ",ins, file=sys.stderr, flush=True)
+                    pass
+                else:
+                    ins.execcount = 1
+                    r = eval(f"{i[1]}('{i[2]}')")
+                    continue
+            elif ":" in i[0]:
+                pass
+            elif i[0] == "JMP":
+                r = eval(f"{i[0]}('{i[1]}')")
+                continue
+            elif i[0] == "MOV":
+                r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
+            elif i[0] =="ADD" or i[0] == "SUB" or i[0]=="MUL":
+                r = eval(f"{i[0]}('{i[1]}')")
+            elif i[0] =="NOT":
+                r = eval(f"{i[0]}()")
+            elif i[0] =="DGT":
+                r = eval(f"{i[0]}('{i[1]}')")
+            elif i[0] =="DST":
+                r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
+            elif i[0] =="TEQ":
+                r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
+            elif i[0] =="TGT":
+                r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
+            elif i[0] =="TLT":
+                r = eval(f"{i[0]}('{i[1]}','{i[2]}')")
 
-        my_cpu.line+=1
+            my_cpu.line+=1
 
 # Write an answer using print
 # To debug: print("Debug messages...", file=sys.stderr, flush=True)
