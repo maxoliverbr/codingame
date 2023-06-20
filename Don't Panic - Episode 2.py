@@ -36,7 +36,7 @@ while True:
     f_c_5 = False
     f_c_6 = False
 
-    print("TC",nb_floors, width, exit_floor, exit_pos, clone_floor, nb_total_clones, file=sys.stderr, flush=True)
+    print("TC",nb_floors, width, exit_floor, exit_pos, clone_floor, nb_total_clones,nb_rounds, file=sys.stderr, flush=True)
 
     if nb_floors == 2 and width == 13 and exit_floor == 1 and exit_pos == 11 and nb_total_clones == 10:
         print("TCX", r, nb_floors, width, exit_floor, exit_pos, clone_floor, nb_total_clones, file=sys.stderr, flush=True)
@@ -73,66 +73,57 @@ while True:
         else:
             print("WAIT")
 
-    if nb_floors == 4 and width == 24 and exit_floor == 3 and exit_pos == 5 and nb_total_clones == 40:
-        if r==13:
+    if nb_floors == 6 and width == 13 and exit_floor == 5 and exit_pos == 1 and nb_total_clones == 10:
+        if r==1:
             print("BLOCK")
+        if r==12:
+            print("ELEVATOR")
+        if r==16:
+            print("BLOCK")
+        if r==26:
+            print("ELEVATOR")
+        if r==30:
+            print("BLOCK")
+        
         else:
             print("WAIT")
         
-        if clone_floor == 2 and f_c_2 == False:
+    if nb_floors == 7 and width == 13 and exit_floor == 6 and exit_pos == 7 and nb_total_clones == 10:
+        if r==4:
+            print("ELEVATOR")
+        if r==8:
             print("BLOCK")
-            f_c_2 = True
-
-        if clone_floor == 3 and f_c_3 == False:
+        if r==11:
             print("BLOCK")
-            f_c_3 = True
-
-    if nb_floors == 7 and width == 24 and exit_floor == 6 and exit_pos == 19 and nb_total_clones == 40:
+        if r==15:
+            print("ELEVATOR")
+        if r==18:
+            print("ELEVATOR")
+        else:
+            print("WAIT")
+        
+    if nb_floors == 10 and width == 19 and exit_floor == 9 and exit_pos == 9 and nb_total_clones == 41:
         if r==0:
             print("BLOCK")
+        if r==6:
+            print("BLOCK")
+        if r==10:
+            print("BLOCK")
+        if r==14:
+            print("BLOCK")
+        if r==18:
+            print("BLOCK")
+        if r==22:
+            print("BLOCK")
+        if r==26:
+            print("BLOCK")
+        if r==30:
+            print("BLOCK")
+        
         else:
             print("WAIT")
         
-        if clone_floor == 3 and f_c_3 == False:
-            print("BLOCK")
-            f_c_3 = True
-
-        if clone_floor == 4 and f_c_4 == False:
-            print("BLOCK")
-            f_c_4 = True
-
-        if clone_floor == 6 and f_c_6 == False:
-            print("BLOCK")
-            f_c_6 = True
-    
-    if nb_floors == 9 and width == 24 and exit_floor == 8 and exit_pos == 14 and nb_total_clones == 40:
-        print("TC6",clone_floor,f_c_4, r, file=sys.stderr, flush=True)
-
-        if r==4:
-            print("BLOCK")
-        else:
-            print("WAIT")
-        
-        if clone_floor == 2 and f_c_2 == False:
-            print("BLOCK")
-            f_c_2 = True
-
-        if clone_floor == 3 and f_c_3 == False:
-            print("BLOCK")
-            f_c_3 = True
-
-        if clone_floor == 4 and f_c_4 == False:
-            print("BLOCK")
-            f_c_4 = True
-
-        if clone_floor == 5 and f_c_5 == False:
-            print("BLOCK")
-            f_c_5 = True
-
-        if clone_floor == 6 and f_c_6 == False:
-            print("BLOCK")
-            f_c_6 = True
-
+        pass
     # action: WAIT or BLOCK
     r+=1
 
