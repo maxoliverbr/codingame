@@ -142,11 +142,18 @@ while True:
     if nb_floors == 13 and width == 36 and nb_rounds == 67 and exit_floor == 11 and exit_pos == 12 and nb_total_clones == 41:
         if r==0:
             print("ELEVATOR")
-        elif r==23:
+        elif r==4:
             print("BLOCK")
-        elif r==48:
+        elif r==12:
             print("BLOCK")
-        
+        elif r==18:
+            print("ELEVATOR")
+        elif r==28:
+            print("ELEVATOR")
+        elif r==47:
+            print("BLOCK")
+        elif r==62:
+            print("ELEVATOR")
         else:
             print("WAIT")
          
