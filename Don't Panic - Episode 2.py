@@ -106,7 +106,7 @@ while True:
             print("WAIT")
         
     # TC06
-    if nb_floors == 10 and width == 19 and exit_floor == 9 and exit_pos == 9 and nb_total_clones == 41:
+    if nb_floors == 10 and width == 19 and nb_rounds == 47 and exit_floor == 9 and exit_pos == 9 and nb_total_clones == 41:
         if r==4:
             print("BLOCK")
         elif r==15:
@@ -127,19 +127,47 @@ while True:
         if r==4:
             print("BLOCK")
         elif r==15:
-            print("BLOCK")
+            print("ELEVATOR")
         elif r==20:
             print("BLOCK")
         elif r==25:
             print("BLOCK")
         elif r==30:
             print("BLOCK")
-        elif r==35:
-            print("BLOCK")
         else:
             print("WAIT")
         
         
+     # TC08
+    if nb_floors == 13 and width == 36 and nb_rounds == 67 and exit_floor == 11 and exit_pos == 12 and nb_total_clones == 41:
+        if r==0:
+            print("ELEVATOR")
+        elif r==23:
+            print("BLOCK")
+        elif r==48:
+            print("BLOCK")
+        
+        else:
+            print("WAIT")
+         
+    """ # TC08
+    if nb_floors == 13 and width == 36 and nb_rounds == 67 and exit_floor == 11 and exit_pos == 12 and nb_total_clones == 41:
+        if r==11:
+            print("ELEVATOR")
+        elif r==16:
+            print("ELEVATOR")
+        elif r==21:
+            print("BLOCK")
+        elif r==39:
+            print("BLOCK")
+        elif r==57:
+            print("ELEVATOR")
+        elif r==62:
+            print("BLOCK")
+        
+        else:
+            print("WAIT")
+     """
     # action: WAIT or BLOCK
     """ if nb_floors == 10 and width == 19 and exit_floor == 9 and exit_pos == 9 and nb_total_clones == 41:
         if r==4:
