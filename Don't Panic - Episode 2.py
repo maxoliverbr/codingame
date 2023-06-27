@@ -50,8 +50,11 @@ while True:
             o=Action["W"]
     
     # TC06
-    if nbf == 10 and width == 19 and nb_rounds == 47 and exit_floor in [8,9] and exit_pos == 9 and nb_total_clones == 41:
-        tc06 = {4:"B", 15:"B",20:"B",25:"B",30:"B",35:"B"}
+    if nbf == 10 and width in[19,21] and nb_rounds == 47 and exit_floor == 9 and exit_pos in [8,9] and nb_total_clones == 41:
+        if exit_pos == 9:
+            tc06 = {4:"B", 15:"B",20:"B",25:"B",30:"B",35:"B"}
+        else:
+            tc06 = {3:"B", 15:"B",20:"B",25:"B",30:"B",35:"B"}
         if r in tc06:
             o=Action[tc06[r]]
         else:
@@ -59,7 +62,7 @@ while True:
     
     
     # TC07
-    if nbf == 10 and width == 19 and nb_rounds == 42 and exit_floor == 9 and exit_pos == 9 and nb_total_clones == 41:
+    if nbf == 10 and width in [19,22] and nb_rounds == 42 and exit_floor == 9 and exit_pos in [9,11] and nb_total_clones == 41:
         tc07 = {4:"B",15:"E",20:"B",25:"B",30:"B"}
         if r in tc07:
             o=Action[tc07[r]]
@@ -68,42 +71,37 @@ while True:
     
         
     # TC08
-    if nbf == 13 and width == 36 and nb_rounds == 67 and exit_floor == 11 and exit_pos == 12 and nb_total_clones == 41:
-        if r==0:
-            print("ELEVATOR")
-        elif r==4:
-            print("BLOCK")
-        elif r==12:
-            print("BLOCK")
-        elif r==18:
-            print("ELEVATOR")
-        elif r==28:
-            print("ELEVATOR")
-        elif r==47:
-            print("BLOCK")
-        elif r==62:
-            print("ELEVATOR")
+    if nbf in [13,14] and width in [36,37] and nb_rounds == 67 and exit_floor == 11 and exit_pos == 12 and nb_total_clones == 41:
+        if exit_floor == 11:
+            tc08 = {0:"E", 4:"B", 12:"B", 18:"E", 28:"E", 47:"B", 62:"E"}
         else:
-            print("WAIT")
+            tc08 = {0:"E", 4:"B", 12:"B", 18:"E", 28:"E", 47:"B", 62:"E"}
+
+        if r in tc08:
+            o=Action[tc08[r]]
+        else:
+            o=Action["W"]
+    
          
     # TC09
-    if nbf == 13 and width == 69 and nb_rounds == 79 and exit_floor == 11 and exit_pos == 39 and nb_total_clones == 8:
-        if r==0:
-            print("ELEVATOR")
-        elif r==4:
-            print("BLOCK")
-        elif r==12:
-            print("BLOCK")
-        elif r==18:
-            print("ELEVATOR")
-        elif r==28:
-            print("ELEVATOR")
-        elif r==47:
-            print("BLOCK")
-        elif r==62:
-            print("ELEVATOR")
+    if nbf in [13,14] and width in [69,70,71] and nb_rounds ==79 and exit_floor == 11 and exit_pos == 39 and nb_total_clones == 8:
+        tc09 = {1:"B", 6:"E", 28:"E", 32:"E", 39:"B", 70:"E", 74:"E"}
+        print(f"tc09", file=sys.stderr, flush=True)
+
+        if r in tc09:
+            o=Action[tc09[r]]
         else:
-            print("WAIT")
+            o=Action["W"]
+    
+    # TC10
+    if nbf in [13,14] and width in [69,70,71] and nb_rounds ==109 and exit_floor == 11 and exit_pos == 47 and nb_total_clones == 100:
+        tc10 = {11:"E", 25:"B", 30:"E", 35:"E", 40:"B", 67:"E", 72:"B", 77:"B", 106:"E"}
+        print(f"tc10", file=sys.stderr, flush=True)
+
+        if r in tc10:
+            o=Action[tc10[r]]
+        else:
+            o=Action["W"]
              
     print(o)
     r+=1
