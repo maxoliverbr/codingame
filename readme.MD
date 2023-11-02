@@ -2,7 +2,6 @@
 
 ### Repository of my solutions for some of the CodinGame puzzles. 
 
-Reference-style: 
 ![alt text][Certificate]
 
 [Certificate]: https://github.com/maxoliverbr/codingame/blob/main/chrome_XKh6saBnjx.png "CodinGame Python Certificate"
