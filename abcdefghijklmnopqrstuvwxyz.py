@@ -79,7 +79,7 @@ for i in range(n):
     o.append("-"*n)
 
 c = "a"
-for i in solution_path[:-1]:
+for i in solution_path[0:26]:
     x,y = i
     print(x,y,c, file=sys.stderr, flush=True)
     str_replace(o,c,y,x)
